@@ -14,11 +14,11 @@
       body {
         margin: 0px 0px;
         font-family: sans-serif;
-        background: #000;
+        background: #000000e5;
         overflow: hidden;
       }
 
-      h1 {
+      .shop {
         font-size: 8rem;
         font-weight: 600;
         text-align: center;
@@ -44,20 +44,6 @@
         }
       }
 
-      ::-webkit-scrollbar {
-        width: 10px;
-      }
-
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        box-shadow: inset 2px 3px gray;
-      }
-
-      ::-webkit-scrollbar-thumb {
-        background: linear-gradient(red, blue, rgb(78, 255, 78));
-        border-radius: 0.4rem;
-        height: 1rem;
-      }
       .logout {
         padding: 0.7rem 2rem;
         background: red;
@@ -99,8 +85,10 @@
         border-left: 2px solid white;
         display: flex;
         flex-direction: column;
+        align-items: center;
       }
       .devopts {
+        width: 100%;
         display: flex;
         justify-content: flex-end;
       }
@@ -133,6 +121,37 @@
         background-color: rgb(40, 253, 40);
         scale:1.1;
       }
+      .coupons{
+        width:50rem;
+        height: 20rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        padding: 4rem 2rem;
+        scroll-snap-type: y mandatory;
+        scroll-snap-align: center; 
+
+      }
+            .coupons::-webkit-scrollbar {
+        width: 7px;
+      }
+      .coupons::-webkit-scrollbar-track {
+        width: 9px;
+        box-shadow: inset 1px 1px 1px #000;
+      }
+      .coupons::-webkit-scrollbar-thumb {
+        background: gray;
+        border-radius: 0.2rem;
+      }
+      .coupon-card{
+        background-color: rgb(245, 245, 245);
+        width: 50rem;
+        min-height: 6rem;
+        scroll-snap-align: center;
+      }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -144,14 +163,16 @@
             window.location.href = "Login.html";
         }
         function handleaddCoupon() {
-
+          const couponCard = document.createElement("div");
+          couponCard.classList.add("coupon-card");
+          document.querySelector(".coupons").appendChild(couponCard);
         }
     </script>
 </head>
 
 <body>
     <div class="head">
-    <h1>Shop</h1>
+    <h1 class="shop">Shop</h1>
     <button class="logout" onclick="handleLogout()">Logout</button>
     </div>
     <div class="Container">
@@ -162,7 +183,9 @@
                     <li onclick="handleaddCoupon()">+</li>
                 </ul>
             </div>
-            <div class="coupons"></div>
+            <div class="coupons">
+              <div class="coupon-card"></div>
+            </div>
         </div>
     </div>
 </body>
