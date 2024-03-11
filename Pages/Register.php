@@ -31,7 +31,7 @@
         display: flex;
         flex-direction: column;
         gap: 2rem;
-        padding: 4rem 2rem 3rem 2rem;
+        padding: 2rem 2rem 3rem 2rem;
         background-color: transparent;
         border: white;
         box-shadow: 5px 5px 10px #ffffff;
@@ -130,11 +130,12 @@
     <svg id="svg-container"></svg>
 
     <script>
+
     document.addEventListener('DOMContentLoaded', function () {
       if (JSON.parse(localStorage.getItem("User"))) {
         const user = JSON.parse(localStorage.getItem("User"))
-        if (user.userType === "Shopkeeper") window.location.href = "Shop.html"
-        else window.location.href = "Hero.html"
+        if (user.userType === "Shopkeeper") window.location.href = "Shop.php"
+        else window.location.href = "Hero.php"
       }
     });
 
@@ -156,35 +157,77 @@
       }
       function handleSubmit(event) {
         event.preventDefault();
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword");
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+        let confirmPassword = document.getElementById("confirmPassword").value;
         let userType = undefined;
         let user={};
         const validator = "@shop";
+
+        if (password.includes(validator)) userType = "Shopkeeper";
+        else userType = "Normal";
+
         if (handleValidation(username, password, confirmPassword)) {
-          if (password.includes(validator)) userType = "Shopkeeper";
-          else userType = "Normal";
-            user = {
-            userType: userType,
-            username: username,
-            password: password,
-          };
-                    localStorage.setItem("User", JSON.stringify(user))
-          if (userType === "Shopkeeper") window.location.href = "Shop.html"
-          else window.location.href = "Hero.html"
+
+          function sendXMLreq(username,password,userType){
+            const xhr = new XMLHttpRequest();
+            const url = "SetUser.php";
+            const params = JSON.stringify({ username: username, password: password ,userType:userType});
+
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader("Content-type", "application/json");
+
+            xhr.onload = function () {
+              if (xhr.status >=200 && xhr.status<300){
+                if((JSON.parse(xhr.responseText)).status==='success'){
+                  user = {
+                    userType: userType,
+                    username: username,
+                  };
+
+                  localStorage.setItem("User", JSON.stringify(user))
+                  if (userType === "Shopkeeper") window.location.href = "Shop.php"
+                  else window.location.href = "Hero.php"
+                }
+                if(JSON.parse(xhr.responseText).status==='error'){
+                  showToast(JSON.parse(xhr.responseText).message, 3000);
+                }
+                }
+              else{
+                  showToast(`Error ${xhr.status}`, 3000);                  
+                }
+
+            };
+            xhr.send(params);
+
+          }
+          sendXMLreq(username,password,userType)
           //send user to backend for storage and respond with status from backend
-          //if db responds with "OK" window.location.href="Hero.html"
+          //if db responds with "OK" window.location.href="Hero.php"
           //else showToast("Error while storing details", 3000);
         }
       }
       function handleValidation(username, password, confirmPassword) {
+        if(username.length<6){
+          showToast("Username must be greater than 5 words", 3000);
+          return false;
+        }
+        else if(password!==confirmPassword){
+          showToast("Password and ConfirmPassword must be same", 3000);
+          return false;
+        }
+        else if(password.length<4){
+          showToast("Password cannot be less than 4 words", 3000);
+          return false;
+        }
+        else{
+          return true;  //make it true
+        }
         //if username.length < 5 return false and call showToast("Username must be greater than 5 letters", 3000);
         //if password !== confirmpassword return false and call       showToast("Password and ConfirmPassword are not same", 3000);
         // return true  __for test purpose__also  return if everything works in function
-        // showToast("Some error!", 10000)
-        // return false;
       }
+
       const wheight = window.innerHeight;
       const wwidth = window.innerWidth;
 
@@ -291,34 +334,56 @@
         .attr("y", 600)
         .attr("fill", "blue")
         .on("click", setRandomMotion);
+
+
     </script>
 
-    <form onsubmit="handleSubmit(event)">
-      <h1>Register</h1>
-      <input
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" onsubmit="handleSubmit(event)"  >  
+    <h1>Register</h1>
+    <input
         type="text"
         placeholder="Username"
         name="username"
         id="username"
         autofocus
         required
-      />
-      <input
+    />
+    <input
         type="password"
         placeholder="Password"
         id="password"
         name="password"
         required
-      />
-      <input
+    />
+    <input
         type="password"
         placeholder="ConfirmPassword"
         id="confirmPassword"
-        name="confirmpassword"
+        name="confirmPassword"
         required
-      />
-      <button type="submit" id="myButton">Submit</button>
-      <span>Already a user ?<a href="./Login.html"> Login</a></span>
-    </form>
+    />
+    <button type="submit" name="myButton">Submit</button>
+    <span>Already a user ?<a href="./Login.php" target="_parent"> Login</a></span>
+</form>
   </body>
 </html>
+
+
+        <!--
+        $sql = "INSERT INTO useridpass (username, password) VALUES (?, ?)";
+        $stmt = $conn->prepare($sql);
+
+        // Bind parameters and execute the statement
+        $stmt->bind_param("ss", $username, $password);
+        $stmt->execute();
+
+        // Check if the query was successful
+        if ($stmt->affected_rows > 0) {
+            echo "User inserted successfully.";
+        } else {
+            echo "Error inserting user.";
+        }
+
+        // Close statement and connection
+        $stmt->close();
+        $conn->close(); -->

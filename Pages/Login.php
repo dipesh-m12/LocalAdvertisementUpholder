@@ -109,11 +109,29 @@
       input:focus {
         border: 2px solid blue;
       }
-      @media screen and (max-width: 720px) {
-        form {
-          left: 10vw;
-        }
-      }
+@media screen and (max-width: 450px) {
+  form {
+    position: relative;
+    top: 20vh;
+    left: 0;
+    width: 80%;
+    padding: 2rem;
+  }
+
+  #svg-container {
+    position: relative;
+    top: 30vh;
+    width: 100vw;
+    height: 50vh;
+  }
+
+  svg rect {
+    display: block;
+    margin: 1rem auto;
+  }
+}
+
+
       #toast-container {
         position: fixed;
         bottom: 20px;
@@ -149,8 +167,8 @@
   document.addEventListener('DOMContentLoaded', function () {
     if(JSON.parse(localStorage.getItem("User"))){
       const user=JSON.parse(localStorage.getItem("User"))
-      if(user.userType==="Shopkeeper") window.location.href="Shop.html"
-      else window.location.href="Hero.html"
+      if(user.userType==="Shopkeeper") window.location.href="Shop.php"
+      else window.location.href="Hero.php"
     }
   });
 
@@ -172,24 +190,61 @@
       }
       function handleSubmit(event) {
         event.preventDefault();
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
         let userType=undefined;
         const validator="@shop"
+
+        if(password.includes(validator)) userType="Shopkeeper";
+        else userType="Normal";
+
         if(handleValidation(username,password)){
-          if(password.includes(validator)) userType="Shopkeeper";
-          else userType="Normal";
-          const user={
-            userType:userType,
-            username:username,
-            password:password
+          function sendXMLreq(username,password){
+            const xhr = new XMLHttpRequest();
+            const url = "GetUser.php";
+            const params = JSON.stringify({ username: username, password: password });
+
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader("Content-type", "application/json");
+
+            xhr.onload = function () {
+              if (xhr.status >=200 && xhr.status<300){
+                if((JSON.parse(xhr.responseText)).status==='success'){
+                  const user={
+                    userType:userType,
+                    username:username,
+                  }
+                  localStorage.setItem("User", JSON.stringify(user))
+                  if (userType === "Shopkeeper") window.location.href = "Shop.php"
+                  else window.location.href = "Hero.php"
+                }
+                if(JSON.parse(xhr.responseText).status==='error'){
+                  showToast(JSON.parse(xhr.responseText).message, 3000);
+                }
+                }
+              else{
+                  showToast(`Error ${xhr.status}`, 3000);                  
+                }
+
+            };
+            xhr.send(params);
+
           }
-          localStorage.setItem("User",JSON.stringify(user))
-          if(userType==="Shopkeeper") window.location.href="Shop.html"
-          else window.location.href="Hero.html"
+          sendXMLreq(username,password)
         }
-        }
+      }
       function handleValidation(username,password){
+        if(username.length<6){
+          showToast("Username must be greater than 5 words", 3000);
+          return false;
+        }
+        else if(password.length<4){
+          showToast("Password cannot be less than 4 words", 3000);
+          return false;
+        }
+        else{
+          return true;  //make it true
+        }
 //search for username(unique) in database
 //if not return false and call       showToast("No such user", 3000);
 //if user found but password not matching return false and call       showToast("Incorrect username or password", 3000);
@@ -325,7 +380,7 @@
       />
       <button type="submit" id="myButton">Submit</button>
       <span
-        >Never used before?<a href="./Register.html" target="_parent">
+        >Never used before?<a href="./Register.php" target="_parent">
           Register</a
         ></span
       >

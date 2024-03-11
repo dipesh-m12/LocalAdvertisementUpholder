@@ -231,9 +231,9 @@
         margin-top: 2px solid #fff;
         box-shadow: 0px 0px 0px #fff, 2px -10px 30px #d2d2d2;
 
-        scale: .8;
+        scale: 0.86;
         opacity: 0;
-        animation: fade-in linear forwards;
+        animation: fade-in   linear forwards;
         animation-timeline: view();
         animation-range: entry 200px;
       }
@@ -292,7 +292,7 @@
         event.preventDefault();
       }
       function handleNavigation(page) {
-        if (page === "Login.html") {
+        if (page === "Login.php") {
           localStorage.removeItem("User");
         }
         window.location.href = page;
@@ -313,7 +313,7 @@
         </video>
         <div class="navs">
           <div class="logo">
-            <img
+            <img 
               src="./Blue_Modern_Company_Logo__1_-removebg-preview.png"
               alt="Logo"
             />
@@ -334,17 +334,28 @@
       </div>
       <div class="nav">
         <ul>
-          <li class="about" onclick="handleNavigation('About.html')">About</li>
-          <li class="contact" onclick="handleNavigation('Contact.html')">
+          <li class="about" onclick="handleNavigation('About.php')">About</li>
+          <li class="contact" onclick="handleNavigation('Contact.php')">
             Contact
           </li>
-          <li class="logout" onclick="handleNavigation('Login.html')">
+          <li class="logout" onclick="handleNavigation('Login.php')">
             Logout
           </li>
         </ul>
       </div>
       <div class="main">
         <div class="coupon">
+          <div class="couponCard"></div>
+          <div class="couponCard"></div>
+          <div class="couponCard"></div>
+          <div class="couponCard"></div>
+          <div class="couponCard"></div>
+          <div class="couponCard"></div>
+          <div class="couponCard"></div>
+          <div class="couponCard"></div>
+          <div class="couponCard"></div>
+          <div class="couponCard"></div>
+          <div class="couponCard"></div>
           <div class="couponCard"></div>
           <div class="couponCard"></div>
           <div class="couponCard"></div>

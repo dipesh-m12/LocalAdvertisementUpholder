@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                max-width: 90%;
+            }
+
+            .map {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Contact Us</h2>
+        <form id="contactForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+
+            <input type="submit" value="Submit">
+        </form>
+        <iframe class="map"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d241317.14571337597!2d72.71637411447857!3d19.082177513371683!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c6306644edc1%3A0x5da4ed8f8d648c69!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1709742523325!5m2!1sen!2sin"
+            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+    </div>
+
+
+</body>
+<script type="text/javascript">
+    function validate() {
+        var Username = document.getElementById("name");
+        var password = document.getElementById("email");
+        if (Username.value == "") {
+            alert("please enter username");
+            return false;
+        }
+        else if (password.value == "") {
+            alert("please enter password");
+        }
+
+        else {
+            true;
+        }
+    }
+</script>
+
+</html>
+
+<?php
+require "./UserConnection.php";
+
+
+if($_SERVER['REQUEST_METHOD']=="POST"){
+  if (isset($_POST["myButton"]) ) {
+
+    $username=$_POST["username"];
+    $password=$_POST["password"];
+    $confirmPassword=$_POST["confirmPassword"];
+    $message="";
+    if($username<4){
+      $message="Username must be greater than 4 words";
+    }
+    
+    if($confirmPassword!=$password){
+      $message="Password and Confirm Password are not same";
+    }
+    echo "<script>console.log('{$username},{$password},{$confirmPassword}');</script>";
+      
+  $sql = "INSERT INTO useridpass ( username, password ) VALUES ('$username', '$password')";
+
+  if ($conn->query($sql) === TRUE) {
+      echo "<script>console.log('succcess');</script>";
+      // header("Location: Login.php");
+  } else {
+      $message="Cannot register user";
+}
+}
+
+?>
