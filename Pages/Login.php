@@ -172,22 +172,26 @@
     }
   });
 
-      function showToast(message, duration = 3000) {
-        const toastContainer = document.getElementById("toast-container");
-        const toast = document.createElement("div");
-        toast.className = "toast";
-        toast.innerHTML = message;
-        toastContainer.appendChild(toast);
+    function showToast(message, duration = 3000, color) {
+      const toastContainer = document.getElementById("toast-container");
+      const toast = document.createElement("div");
+
+      toast.className = "toast";
+      toast.innerHTML = message;
+      toast.style.background = color;
+
+
+      toastContainer.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add("show");
         setTimeout(() => {
-          toast.classList.add("show");
+          toast.classList.remove("show");
           setTimeout(() => {
-            toast.classList.remove("show");
-            setTimeout(() => {
-              toast.remove(); // Remove the toast element here
-            }, 500);
-          }, duration);
-        }, 100);
-      }
+            toast.remove();
+          }, 500);
+        }, duration);
+      }, 100);
+    }
       function handleSubmit(event) {
         event.preventDefault();
         let username = document.getElementById("username").value;
@@ -219,11 +223,11 @@
                   else window.location.href = "Hero.php"
                 }
                 if(JSON.parse(xhr.responseText).status==='error'){
-                  showToast(JSON.parse(xhr.responseText).message, 3000);
+                  showToast(JSON.parse(xhr.responseText).message, 3000,"linear-gradient(20deg, black,40%,gray,90%,white)");
                 }
                 }
               else{
-                  showToast(`Error ${xhr.status}`, 3000);                  
+                  showToast(`Error ${xhr.status}`, 3000,"linear-gradient(20deg, black,40%,gray,90%,white)");                  
                 }
 
             };
@@ -235,11 +239,11 @@
       }
       function handleValidation(username,password){
         if(username.length<6){
-          showToast("Username must be greater than 5 words", 3000);
+          showToast("Username must be greater than 5 words", 3000,"linear-gradient(20deg, black,40%,gray,90%,white)");
           return false;
         }
         else if(password.length<4){
-          showToast("Password cannot be less than 4 words", 3000);
+          showToast("Password cannot be less than 4 words", 3000,"linear-gradient(20deg, black,40%,gray,90%,white)");
           return false;
         }
         else{

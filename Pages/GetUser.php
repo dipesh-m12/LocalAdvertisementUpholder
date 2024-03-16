@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     $response = array();
       
-    $sql = "SELECT * FROM useridpass WHERE username='$username'";
+    $sql = "SELECT * FROM useridpass WHERE BINARY  username='$username'"; //case-sensitive
 
     $result = $conn->query($sql);
 
