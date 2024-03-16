@@ -257,7 +257,7 @@
       gap: 4rem;
       flex-direction: column;
       overflow-x: hidden;
-      overflow-y: scroll;
+      overflow-y: auto;
       padding: 7rem 4rem;
       margin-bottom: 2rem;
       scroll-snap-type: y mandatory;
@@ -835,11 +835,13 @@
       window.location.href = page;
     }
 
-    function handleInput(text) {
-      let searchedElements=[];
-      text=text.toLowerCase()
-      if (!text) displayCoupons(lastTenValues);
-      else {
+    function handleInput(val) {
+      let searchedElements = [];
+      let [text,con]=val.split(" ")
+      if(text) {text = text.toLowerCase()}
+      if(con) {con = con.toLowerCase()}
+
+      if (!text) {
         let couponHolder = document.querySelector(".coupon");
         couponHolder.innerHTML = "";
         for (let i = 0; i < 10; i++) {
@@ -847,19 +849,37 @@
           card.classList.add("skeletonBody");
           couponHolder.appendChild(card);
         }
-        searchedElements=couponData_backup.filter((ele) => {
-          let id=ele.id.toLowerCase()
-          let username=ele.username.toLowerCase()
-          let header=ele.header.toLowerCase()
-          let description=ele.description.toLowerCase()
-          let image=ele.image.toLowerCase()
-          let date=ele.Date.toLowerCase()
+        displayCoupons(lastTenValues);
+      } else {
+        let couponHolder = document.querySelector(".coupon");
+        couponHolder.innerHTML = "";
+        for (let i = 0; i < 10; i++) {
+          let card = document.createElement("div");
+          card.classList.add("skeletonBody");
+          couponHolder.appendChild(card);
+        }
+        searchedElements = couponData_backup.filter((ele) => {
+          let id = ele.id.toLowerCase()
+          let username = ele.username.toLowerCase()
+          let header = ele.header.toLowerCase()
+          let description = ele.description.toLowerCase()
+          let image = ele.image.toLowerCase()
+          let date = ele.Date.toLowerCase()
           // console.log(id,username,header,description,image,date)
           // console.log(date.includes(text))
-          if(id.includes(text) || username.includes(text) ||header.includes(text) ||description.includes(text) ||date.includes(text)) return true;
-           else return false; 
+          if (id.includes(text) || username.includes(text) || header.includes(text) || description.includes(text) || date.includes(text)) {
+            if(con){
+              if (id.includes(con) || username.includes(con) || header.includes(con) || description.includes(con) || date.includes(con)) return true;
+              else return false;
+            }
+            return true;
+          }
+          else return false;
         });
         console.log(searchedElements)
+        setTimeout(()=>{
+          if(searchedElements.length===0) showToast("No such coupon available!",4000,"linear-gradient(45deg, #FF5733, #FF0000)")
+        },500)
         displayCoupons(searchedElements)
 
       }
