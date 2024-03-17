@@ -289,7 +289,7 @@
 
     .footer {
       width: 100vw;
-      height: fit-content;
+      height: 220vh;
       padding: 1rem;
       background: #000;
       margin-top: 2px solid #fff;
@@ -302,6 +302,11 @@
       animation-range: entry 10px;
       font-family: "Times New Roman", Times, serif;
       padding-bottom: 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
     }
 
     @keyframes fade-in {
@@ -322,6 +327,14 @@
       text-shadow: 0 0 60px rgba(255, 0, 0, 0.658);
       animation: anime 1s infinite alternate;
       margin: 0;
+      position: fixed;
+      top: 43%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      animation: fade-in linear forwards;
+      animation-timeline: view();
+      animation-range: 30rem 35rem;
     }
 
     @keyframes anime {
@@ -538,6 +551,16 @@
 
     .glowred {
       background: red;
+    }
+
+    .Support {
+      position: absolute;
+      bottom: 7vh
+    }
+
+    .address {
+      position: absolute;
+      bottom: 4vh
     }
   </style>
   <div id="toast-container"></div>
@@ -837,9 +860,13 @@
 
     function handleInput(val) {
       let searchedElements = [];
-      let [text,con]=val.split(" ")
-      if(text) {text = text.toLowerCase()}
-      if(con) {con = con.toLowerCase()}
+      let [text, con] = val.split(" ")
+      if (text) {
+        text = text.toLowerCase()
+      }
+      if (con) {
+        con = con.toLowerCase()
+      }
 
       if (!text) {
         let couponHolder = document.querySelector(".coupon");
@@ -868,18 +895,17 @@
           // console.log(id,username,header,description,image,date)
           // console.log(date.includes(text))
           if (id.includes(text) || username.includes(text) || header.includes(text) || description.includes(text) || date.includes(text)) {
-            if(con){
+            if (con) {
               if (id.includes(con) || username.includes(con) || header.includes(con) || description.includes(con) || date.includes(con)) return true;
               else return false;
             }
             return true;
-          }
-          else return false;
+          } else return false;
         });
         console.log(searchedElements)
-        setTimeout(()=>{
-          if(searchedElements.length===0) showToast("No such coupon available!",4000,"linear-gradient(45deg, #FF5733, #FF0000)")
-        },500)
+        setTimeout(() => {
+          if (searchedElements.length === 0) showToast("No such coupon available!", 4000, "linear-gradient(45deg, #FF5733, #FF0000)")
+        }, 500)
         displayCoupons(searchedElements)
 
       }
@@ -943,13 +969,13 @@
       </div>
     </div>
     <div class="footer">
-      <h1>Thank You!</h1>
+      <h1>Couponify!</h1>
       <p>&copy; 2024 Coupon Hostor. All rights reserved.</p>
-      <p>
+      <p class="Support">
         For support, contact:
         <span onclick="scrollToSupport()" style="color: blue;">View support</span>
       </p>
-      <p>400614 Navi Mumbai, India</p>
+      <p class="address">400614 Navi Mumbai, India</p>
     </div>
   </div>
 </body>
