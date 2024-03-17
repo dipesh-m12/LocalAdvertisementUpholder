@@ -435,7 +435,10 @@
                     displayCoupons(sortedCouponData);
                     showToast(message, 3000, "linear-gradient(45deg, #0000FF, #87CEEB)");
                   }
-                  else console.log("unequal lengths") 
+                  else {
+                    console.log("Unequal lengths")
+                    showToast("Major Issue! Contact admin ... IMMEDIATE RESOLVE NEEDED",10000,"linear-gradient(70deg,red,40%,violet,30%,yellow,20%,white,10%)")
+                  } 
                 }
               } catch (e) {
                 console.log(e.message);
