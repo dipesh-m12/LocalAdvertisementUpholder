@@ -563,17 +563,23 @@
       position: absolute;
       bottom: 4vh
     }
+
+    .dragLeft {
+      transform: translateX(-120rem);
+    }
   </style>
   <div id="toast-container"></div>
 </head>
 
 <body>
   <script>
+    const ws = new WebSocket('ws://localhost:8080');
     let couponData = [];
     let dataChunkCount = -10;
     let couponData_backup = [];
     let FavouriteElements = [];
     let lastTenValues = [];
+
 
     document.addEventListener("DOMContentLoaded", function() {
       if (!JSON.parse(localStorage.getItem("User"))) {
@@ -654,7 +660,7 @@
       }, 100);
     }
 
-     function FetchAllcoupons() {
+    function FetchAllcoupons() {
       if (!JSON.parse(localStorage.getItem("User"))) return;
       const xhr = new XMLHttpRequest();
       url = "./GetAllCoupons.php";
@@ -918,6 +924,24 @@
     //   couponCard.classList.add("couponCard");
     //   document.querySelector(".coupon").appendChild(couponCard);
     // }
+    ws.addEventListener('open', function(event) {
+      console.log('Connected to WebSocket server');
+    });
+    ws.addEventListener('message', function(event) {
+      const specificCouponCard = document.querySelector(`div[data-id="${event.data}"]`);
+      if(!specificCouponCard) return;
+      specificCouponCard.classList.add("dragLeft")
+      setTimeout(()=>{
+        specificCouponCard.remove()
+      },300)
+      showToast("A coupon in your collection was unlisted!",3000,"linear-gradient(90deg, #FFD700, #FFA500, #FF6347)")
+      // if(lastTenValues.includes(parseInt(event.data))){
+      //   console.log("yes")
+      // }
+      // else{
+      //   console.log("no")
+      // }
+    });
   </script>
 
   <div class="scroll-watcher"></div>

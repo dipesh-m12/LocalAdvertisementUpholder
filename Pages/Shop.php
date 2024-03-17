@@ -536,7 +536,9 @@
 
 <body>
   <script>
+    const ws = new WebSocket('ws://localhost:8080');
     let img;
+
 
     document.addEventListener("DOMContentLoaded", function() {
       if (!JSON.parse(localStorage.getItem("User"))) {
@@ -667,7 +669,6 @@
           try {
             const response = JSON.parse(xhr.responseText);
             img = response;
-            console.log(img)
             document.querySelector(".img").style.backgroundColor = img.photos[0].avg_color
             document.querySelector(".img").src = img.photos[0].src.original;
             showToast("Fetched Your Image!", 3000, "linear-gradient(45deg, #006400, #00FF00)");
@@ -814,7 +815,7 @@
                   let couponCountElement = document.querySelector(".numCount")
                   couponCountElement.innerText = parseInt(couponCountElement.innerText) - 1
                 }, 400)
-
+                ws.send(`${couponId}`)
               }
               if (JSON.parse(xhr.responseText).status === 'error') {
                 console.log("inside load err")
@@ -851,6 +852,9 @@
     //     couponImageInput.files = event.dataTransfer.files;
     //   }
     // });
+    ws.addEventListener('open', function (event) {
+      console.log('Connected to WebSocket server');
+    });
   </script>
   <div class="head">
     <h1 class="shop">Shop</h1>
