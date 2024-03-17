@@ -204,7 +204,7 @@
     }
 
     .couponCard {
-      background-color: rgb(245, 245, 245);
+      background-color: hsl(200, 20%, 70%);
       box-shadow: 2px 3px 7px #403f3f;
       scale: 1;
       width: 100%;
@@ -265,7 +265,6 @@
       /* Add this line */
       border-bottom: 0.1px solid rgb(151, 151, 151);
       box-shadow: inset 0 -30px 30px #9b9b9b;
-
       scale: 0.8;
       opacity: 0;
       animation: fade-in linear forwards;
@@ -294,7 +293,9 @@
       background: #000;
       margin-top: 2px solid #fff;
       box-shadow: 0px 0px 0px #fff, 2px -10px 30px #d2d2d2;
-
+      background-image: url("./robot.gif");
+      background-repeat: no-repeat;
+      background-position: 50% 30%;
       scale: 0.86;
       opacity: 0;
       animation: fade-in linear forwards;
@@ -609,6 +610,7 @@
               } = (JSON.parse(xhr.responseText))
               if (data) {
                 FavouriteElements = data.map(ele => parseInt(ele.couponid))
+                FetchAllcoupons()
               }
             } catch (e) {
               console.log(e.message);
@@ -616,6 +618,7 @@
           }
           if (JSON.parse(xhr.responseText).status === "error") {
             console.log(JSON.parse(xhr.responseText).message);
+            FetchAllcoupons()
           }
         } else {
           showToast(`Error ${xhr.status}`, 3000, "linear-gradient(45deg, #FF5733, #FF0000)");
@@ -651,7 +654,7 @@
       }, 100);
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
+     function FetchAllcoupons() {
       if (!JSON.parse(localStorage.getItem("User"))) return;
       const xhr = new XMLHttpRequest();
       url = "./GetAllCoupons.php";
@@ -692,7 +695,7 @@
         showToast("Request Failed!", 3000, "linear-gradient(45deg, #FF5733, #FF0000)");
       };
       xhr.send();
-    });
+    }
 
     function displayCoupons(coupons) {
       const couponsContainer = document.querySelector(".coupon");
@@ -906,7 +909,7 @@
         setTimeout(() => {
           if (searchedElements.length === 0) showToast("No such coupon available!", 4000, "linear-gradient(45deg, #FF5733, #FF0000)")
         }, 500)
-        displayCoupons(searchedElements)
+        displayCoupons(searchedElements.reverse())
 
       }
     }

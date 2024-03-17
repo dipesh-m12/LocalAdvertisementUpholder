@@ -147,6 +147,12 @@
       scroll-snap-type: y mandatory;
       scroll-snap-align: center;
       scroll-behavior: smooth;
+      transition: all 0.2s ease-in-out;
+    }
+
+
+    .couponDragLeft {
+      transform: translateX(-90rem);
     }
 
     .coupons::-webkit-scrollbar {
@@ -183,6 +189,7 @@
 
     .coupon-card:hover {
       opacity: 1;
+      scale:1.05;
       box-shadow: inset 0 -15px 15px -5px rgba(0, 0, 0, 0.5), inset 0 15px 15px -5px rgba(0, 0, 0, 0.5);
     }
 
@@ -561,22 +568,22 @@
       xhr.onload = function() {
         if (xhr.status >= 200 && xhr.status < 300) {
           try {
-          if (JSON.parse(xhr.responseText).status === "success") {
-            const responseData = JSON.parse(xhr.responseText);
-            displayCoupons(responseData.data);
-            showToast(responseData.message, 3000, "linear-gradient(45deg, #006400, #00FF00)");
-            document.querySelector(".numCount").innerText = responseData.data.length;
-          }
-          if (JSON.parse(xhr.responseText).status === "error") {
-            
+            if (JSON.parse(xhr.responseText).status === "success") {
+              const responseData = JSON.parse(xhr.responseText);
+              displayCoupons(responseData.data);
+              showToast(responseData.message, 3000, "linear-gradient(45deg, #006400, #00FF00)");
+              document.querySelector(".numCount").innerText = responseData.data.length;
+            }
+            if (JSON.parse(xhr.responseText).status === "error") {
+
               if (JSON.parse(localStorage.getItem("User")).userType === "Shopkeeper") {
                 console.log("You have no previous coupons stored, create so people can see your shop")
                 showToast(JSON.parse(xhr.responseText).message, 3000, "linear-gradient(45deg, #FF5733, #FF0000)");
               }
             }
           } catch (e) {
-              showToast("There was some error! Try again later",3000,"linear-gradient(45deg, #FF5733, #FF0000)")
-            }
+            showToast("There was some error! Try again later", 3000, "linear-gradient(45deg, #FF5733, #FF0000)")
+          }
 
         } else {
           showToast(`Error ${xhr.status}`, 3000, "linear-gradient(45deg, #FF5733, #FF0000)");
@@ -601,7 +608,7 @@
         couponCard.style.backgroundImage = `url(${coupon.image})`;
         couponCard.setAttribute("data-id", coupon.id);
         couponCard.classList.add("coupon-card");
-        couponCard.classList.add("skeleton");
+        // couponCard.classList.add("skeleton");
         couponCard.innerHTML = `
                 <h3 class="coupon_header">${coupon.header}</h3>
                 <pre class="coupon_desc">${coupon.description}</pre>
@@ -663,7 +670,7 @@
             console.log(img)
             document.querySelector(".img").style.backgroundColor = img.photos[0].avg_color
             document.querySelector(".img").src = img.photos[0].src.original;
-            showToast("Fetched Your Image!", 3000,  "linear-gradient(45deg, #006400, #00FF00)");
+            showToast("Fetched Your Image!", 3000, "linear-gradient(45deg, #006400, #00FF00)");
           } catch (e) {
             showToast("Oops something went wrong, try changing the title! ", 3000, "linear-gradient(45deg, #FF5733, #FF0000)")
             document.querySelector(".img").classList.toggle("imgshow");
@@ -758,7 +765,7 @@
     function handleaddCoupon(header, desc, image, id) {
       let couponCard = document.createElement("div");
       couponCard.classList.add("coupon-card");
-      couponCard.classList.add("skeleton");
+      // couponCard.classList.add("skeleton");
       couponCard.setAttribute("data-id", id);
       couponCard.style.backgroundImage = `url(${image})`;
 
@@ -800,10 +807,14 @@
           xhr.onload = function() {
             if (xhr.status >= 200 && xhr.status < 300) {
               if ((JSON.parse(xhr.responseText)).status === 'success') {
-                showToast("Coupon deleted!", 3000, "linear-gradient(45deg, #0000FF, #87CEEB)");
-                couponCard.remove();
-                let couponCountElement = document.querySelector(".numCount")
-                couponCountElement.innerText = parseInt(couponCountElement.innerText) - 1
+                couponCard.classList.add("couponDragLeft")
+                setTimeout(() => {
+                  showToast("Coupon deleted!", 3000, "linear-gradient(45deg, #0000FF, #87CEEB)");
+                  couponCard.remove();
+                  let couponCountElement = document.querySelector(".numCount")
+                  couponCountElement.innerText = parseInt(couponCountElement.innerText) - 1
+                }, 400)
+
               }
               if (JSON.parse(xhr.responseText).status === 'error') {
                 console.log("inside load err")
@@ -823,6 +834,7 @@
     function handleImgClick() {
       document.querySelector(".img").src = "";
       document.querySelector(".img").style.backgroundColor = "transparent"
+      img=""
     }
     // const couponForm = document.querySelector('form');
     // const couponImageInput = document.getElementById('coupon_image');
@@ -847,7 +859,7 @@
   <div class="couponCount">Your Coupons: <span class="numCount">0</span></div>
   <div class="Container">
     <div class="left">
-      <form class="coupon_form" enctype="multipart/form-data" onsubmit="handleForm(event)" >
+      <form class="coupon_form" enctype="multipart/form-data" onsubmit="handleForm(event)">
         <label for="coupon_header" class="header_label">Title</label>
         <input type="text" id="coupon_header" name="coupon_header" autocomplete="additional-name" autofocus required />
 
@@ -869,7 +881,7 @@
           <li onclick="ToggleForm()">+</li>
         </ul>
       </div>
-      <div class="coupons skeleton">
+      <div class="coupons ">
         <div class="skeletonBody"></div>
         <div class="skeletonBody"></div>
         <div class="skeletonBody"></div>

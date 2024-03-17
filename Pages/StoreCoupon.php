@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD']=="POST") {
     $response['message'] = 'Coupon stored successfully!';
     } else {
     $response['status'] = 'error';
-    $response['message'] = 'Failed to store coupon: ' ;             //. $conn->error
+    $response['message'] = 'Failed to store coupon ' ;             //. $conn->error
     }
     echo json_encode($response);
 }
