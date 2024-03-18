@@ -538,6 +538,7 @@
   <script>
     const ws = new WebSocket('ws://localhost:8080');
     let img;
+    let random_index
 
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -645,6 +646,7 @@
       }, 100);
     }
 
+
     function FetchImg(event) {
       event.preventDefault();
       let header = document.getElementById("coupon_header").value;
@@ -656,9 +658,9 @@
 
 
       if (typeof query === "string" && query.trim() !== "") {
-        apiUrl = `https://api.pexels.com/v1/search?query=${query}&per_page=1&size=small&orientation=landscape`;
+        apiUrl = `https://api.pexels.com/v1/search?query=${query}&per_page=10&size=small&orientation=landscape`;
       } else {
-        apiUrl = `https://api.pexels.com/v1/search?query=grid&per_page=1&size=small&orientation=landscape`;
+        apiUrl = `https://api.pexels.com/v1/search?query=grid&per_page=10&size=small&orientation=landscape`;
       }
       let xhr = new XMLHttpRequest();
       xhr.open("GET", apiUrl, true);
@@ -669,8 +671,9 @@
           try {
             const response = JSON.parse(xhr.responseText);
             img = response;
-            document.querySelector(".img").style.backgroundColor = img.photos[0].avg_color
-            document.querySelector(".img").src = img.photos[0].src.original;
+            random_index=Math.floor(Math.random()*10)
+            document.querySelector(".img").style.backgroundColor = img.photos[random_index].avg_color
+            document.querySelector(".img").src = img.photos[random_index].src.original;
             showToast("Fetched Your Image!", 3000, "linear-gradient(45deg, #006400, #00FF00)");
           } catch (e) {
             showToast("Oops something went wrong, try changing the title! ", 3000, "linear-gradient(45deg, #FF5733, #FF0000)")
@@ -718,7 +721,7 @@
           img = await convertToBase64(document.querySelector("#coupon_image").files[0]);
           console.log(img)
         } else {
-          img = img.photos[0].src.original
+          img = img.photos[random_index].src.original
         }
       } catch (e) {
         showToast("Pick a photo!", 3000, "linear-gradient(45deg, #FF5733, #FF0000)");
