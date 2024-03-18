@@ -189,7 +189,7 @@
 
     .coupon-card:hover {
       opacity: 1;
-      scale:1.05;
+      scale: 1.05;
       box-shadow: inset 0 -15px 15px -5px rgba(0, 0, 0, 0.5), inset 0 15px 15px -5px rgba(0, 0, 0, 0.5);
     }
 
@@ -769,6 +769,11 @@
       // couponCard.classList.add("skeleton");
       couponCard.setAttribute("data-id", id);
       couponCard.style.backgroundImage = `url(${image})`;
+      const skeletonBodies = document.querySelectorAll(".skeletonBody");
+
+      skeletonBodies.forEach((element) => {
+        element.remove();
+      });
 
       couponCard.innerHTML = `
                               <h3 class="coupon_header">${header}</h3>
@@ -835,7 +840,7 @@
     function handleImgClick() {
       document.querySelector(".img").src = "";
       document.querySelector(".img").style.backgroundColor = "transparent"
-      img=""
+      img = ""
     }
     // const couponForm = document.querySelector('form');
     // const couponImageInput = document.getElementById('coupon_image');
@@ -852,7 +857,7 @@
     //     couponImageInput.files = event.dataTransfer.files;
     //   }
     // });
-    ws.addEventListener('open', function (event) {
+    ws.addEventListener('open', function(event) {
       console.log('Connected to WebSocket server');
     });
   </script>
